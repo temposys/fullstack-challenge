@@ -30,14 +30,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN a2enmod rewrite headers
 RUN service apache2 restart
 
-# Create directory for supervisor configs
 RUN mkdir -p /etc/supervisor/conf.d
 
-# Add supervisor configuration for WebSocket server
 COPY websocket-supervisor.conf /etc/supervisor/conf.d/
 
-# Expose WebSocket port
 EXPOSE 6003
 
-# Start supervisor (which will manage the WebSocket server)
 CMD ["supervisord", "-n"]

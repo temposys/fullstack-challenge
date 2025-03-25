@@ -23,11 +23,11 @@ class WebSocketClient {
     const wsUrl = `ws://${import.meta.env.VITE_PUSHER_HOST}:${
       import.meta.env.VITE_PUSHER_PORT
     }/app/${import.meta.env.VITE_PUSHER_APP_KEY}`;
-    console.log("Connecting to WebSocket:", wsUrl);
+    // console.log("Connecting to WebSocket:", wsUrl);
     this.ws = new WebSocket(wsUrl);
 
     this.ws.onopen = () => {
-      console.log("WebSocket Connected");
+      // console.log("WebSocket Connected");
       // Subscribe to the weather channel
       if (this.ws && this.ws.readyState === WebSocket.OPEN) {
         this.ws.send(
@@ -39,9 +39,9 @@ class WebSocketClient {
       }
     };
 
-    this.ws.onerror = (error: Event) => {
-      console.error("WebSocket connection error:", error);
-    };
+    // this.ws.onerror = (error: Event) => {
+    //   console.error("WebSocket connection error:", error);
+    // };
 
     this.ws.onmessage = (event: MessageEvent) => {
       try {
@@ -51,13 +51,13 @@ class WebSocketClient {
           handlers.forEach((handler) => handler(data.data));
         }
       } catch (error) {
-        console.error("Failed to parse WebSocket message:", error);
+        // console.error("Failed to parse WebSocket message:", error);
       }
     };
 
     this.ws.onclose = () => {
-      console.log("WebSocket connection closed. Reconnecting...");
-      setTimeout(() => this.connect(), 1000);
+      // console.log("WebSocket connection closed. Reconnecting...");
+      setTimeout(() => this.connect(), 2000);
     };
   }
 
