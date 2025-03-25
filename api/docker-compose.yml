@@ -5,8 +5,14 @@ services:
             context: ./docker
         ports:
             - "80:80"
+            - "6003:6003"
         volumes:
             - .:/var/www/html
+        networks:
+            - app-network
+        environment:
+            - APACHE_RUN_USER=#1000
+            - APACHE_RUN_GROUP=#1000
 
     mysql:
         image: mysql:8
@@ -17,6 +23,8 @@ services:
             - ./docker:/docker-entrypoint-initdb.d
         environment:
             MYSQL_ROOT_PASSWORD: root
+        networks:
+            - app-network
 
     redis:
         image: redis:7
@@ -24,7 +32,13 @@ services:
             - "6379:6379"
         volumes:
             - redis_data:/data
+        networks:
+            - app-network
 
 volumes:
     mysql_data:
     redis_data:
+
+networks:
+    app-network:
+        driver: bridge
