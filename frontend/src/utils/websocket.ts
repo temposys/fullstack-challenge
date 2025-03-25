@@ -1,15 +1,18 @@
-import type { User } from "@/types/ApiTypes";
+import type { Weather } from "@/types/ApiTypes";
 
 interface WebSocketMessage {
   event: string;
-  data: User;
+  data: { userId: number; weather: Weather | null };
 }
 
-type WeatherUpdateHandler = (data: User) => void;
+type WeatherHandler = (data: {
+  userId: number;
+  weather: Weather | null;
+}) => void;
 
 class WebSocketClient {
   private ws: WebSocket | null = null;
-  private handlers: Map<string, User[]>;
+  private handlers: Map<string, WeatherHandler[]>;
 
   constructor() {
     this.handlers = new Map();
@@ -44,7 +47,7 @@ class WebSocketClient {
       try {
         const data: WebSocketMessage = JSON.parse(event.data);
         if (data.event === "WeatherUpdated") {
-          const handlers = this.handlers.get("weather-update") || [];
+          const handlers = this.handlers.get("weather") || [];
           handlers.forEach((handler) => handler(data.data));
         }
       } catch (error) {
@@ -58,11 +61,13 @@ class WebSocketClient {
     };
   }
 
-  onWeatherUpdate(callback: WeatherUpdateHandler): void {
-    if (!this.handlers.has("weather-update")) {
-      this.handlers.set("weather-update", []);
+  onWeatherUpdate(
+    callback: (data: { userId: number; weather: Weather | null }) => void
+  ): void {
+    if (!this.handlers.has("weather")) {
+      this.handlers.set("weather", []);
     }
-    this.handlers.get("weather-update")?.push(callback);
+    this.handlers.get("weather")?.push(callback);
   }
 }
 

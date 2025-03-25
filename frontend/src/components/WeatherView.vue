@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import axios from 'axios';
-// import wsClient from "@/utils/websocket";
-import type { User } from "@/types/ApiTypes";
+import wsClient from "@/utils/websocket";
+import type { Weather, User } from "@/types/ApiTypes";
 
 const API_DOMAIN = import.meta.env.VITE_API_DOMAIN;
 const users = ref<User[]>([]);
@@ -90,7 +90,7 @@ const startAutoRefresh = () => {
   stopAutoRefresh(); // Clear any existing interval
   refreshInterval.value = window.setInterval(
     refreshAllWeatherData,
-    import.meta.env.VITE_AUTOREFRESH
+    Number(import.meta.env.VITE_AUTOREFRESH)
   );
 };
 
@@ -102,24 +102,24 @@ const stopAutoRefresh = () => {
 };
 
 // Update via WebSocket
-// const subscribeWeatherUpdates = () => {
-//   // Subscribe to weather updates using the new WebSocket client
-//   wsClient.onWeatherUpdate((data) => {
-//     const index = users.value.findIndex(
-//       (u: { id: number }) => u.id === data.userId
-//     );
-//     if (index !== -1) {
-//       users.value[index].weather = data.weather;
-//     } else {
-//       console.warn(`Received weather update for unknown user ${data.userId}`);
-//     }
-//   });
-// };
+const subscribeWeatherUpdates = () => {
+  // Subscribe to weather updates using the new WebSocket client
+  wsClient.onWeatherUpdate(
+    (data: { userId: number; weather: Weather | null }) => {
+      const index = users.value.findIndex(
+        (u: { id: number }) => u.id === data.userId
+      );
+      if (index !== -1) {
+        users.value[index].weather = data.weather;
+      }
+    }
+  );
+};
 
 onMounted(() => {
   fetchUsersData();
   startAutoRefresh();
-  // subscribeWeatherUpdates();
+  subscribeWeatherUpdates();
 });
 
 onUnmounted(() => {

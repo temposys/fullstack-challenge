@@ -7,21 +7,21 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'close'): void;
+  (e: "close"): void;
 }>();
 
 const handleEscape = (e: KeyboardEvent) => {
-  if (e.key === 'Escape') {
-    emit('close');
+  if (e.key === "Escape") {
+    emit("close");
   }
 };
 
 onMounted(() => {
-  document.addEventListener('keydown', handleEscape);
+  document.addEventListener("keydown", handleEscape);
 });
 
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleEscape);
+  document.removeEventListener("keydown", handleEscape);
 });
 </script>
 
@@ -50,11 +50,13 @@ onUnmounted(() => {
         <!-- Content -->
         <div class="sm:flex sm:items-start">
           <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-            <h3 class="text-lg font-semibold leading-6 text-gray-900 mb-4">{{ title }}</h3>
+            <h3 class="text-lg font-semibold leading-6 text-gray-900 mb-4">
+              {{ title }}
+            </h3>
             <slot></slot>
           </div>
         </div>
       </div>
     </div>
   </div>
-</template> 
+</template>

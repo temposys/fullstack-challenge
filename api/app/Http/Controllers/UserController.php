@@ -16,11 +16,14 @@ class UserController extends Controller
     {
         $limit = $request->query('limit', 20);
         $users = User::inRandomOrder()->take($limit)->get();
-//        $users = User::where('id', '<=', 3)->get();
+
         $usersWithWeather = $users->map(function ($user) {
+            // add a queue to update weather
             dispatch(new UpdateWeatherJob($user));
+            // get what we have in redis now
             $key = "weather:{$user->latitude}:{$user->longitude}";
             $user->weather = Redis::get($key) ? json_decode(Redis::get($key)) : null;
+
             return $user;
         });
 
