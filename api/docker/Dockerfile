@@ -14,11 +14,10 @@ RUN docker-php-ext-install \
     mysqli \
     pdo_mysql \
     zip \
-    pcntl \
-    sockets
+    pcntl
 
 RUN pecl install redis
-RUN docker-php-ext-enable redis pcntl sockets
+RUN docker-php-ext-enable redis pcntl
 
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
@@ -32,8 +31,8 @@ RUN service apache2 restart
 
 RUN mkdir -p /etc/supervisor/conf.d
 
-COPY websocket-supervisor.conf /etc/supervisor/conf.d/
+COPY supervisor.conf /etc/supervisor/conf.d/
 
-EXPOSE 6003
+EXPOSE 80
 
 CMD ["supervisord", "-n"]

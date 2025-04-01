@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import axios from 'axios';
-import wsClient from "@/utils/websocket";
+import { ref, onMounted, onUnmounted } from "vue";
+import axios from "axios";
+// import wsClient from "@/utils/websocket";
 import type { Weather, User } from "@/types/ApiTypes";
 
 const API_DOMAIN = import.meta.env.VITE_API_DOMAIN;
@@ -102,24 +102,24 @@ const stopAutoRefresh = () => {
 };
 
 // Update via WebSocket
-const subscribeWeatherUpdates = () => {
-  // Subscribe to weather updates using the new WebSocket client
-  wsClient.onWeatherUpdate(
-    (data: { userId: number; weather: Weather | null }) => {
-      const index = users.value.findIndex(
-        (u: { id: number }) => u.id === data.userId
-      );
-      if (index !== -1) {
-        users.value[index].weather = data.weather;
-      }
-    }
-  );
-};
+// const subscribeWeatherUpdates = () => {
+//   // Subscribe to weather updates using the new WebSocket client
+//   wsClient.onWeatherUpdate(
+//     (data: { userId: number; weather: Weather | null }) => {
+//       const index = users.value.findIndex(
+//         (u: { id: number }) => u.id === data.userId
+//       );
+//       if (index !== -1) {
+//         users.value[index].weather = data.weather;
+//       }
+//     }
+//   );
+// };
 
 onMounted(() => {
   fetchUsersData();
   startAutoRefresh();
-  subscribeWeatherUpdates();
+  // subscribeWeatherUpdates();
 });
 
 onUnmounted(() => {
@@ -128,16 +128,26 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="apiError" class="bg-red-50 border border-red-200 text-red-800 rounded-md p-4 mb-4">
+  <div
+    v-if="apiError"
+    class="bg-red-50 border border-red-200 text-red-800 rounded-md p-4 mb-4"
+  >
     <div class="flex items-center">
       <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+        <path
+          fill-rule="evenodd"
+          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+          clip-rule="evenodd"
+        ></path>
       </svg>
       <span class="font-medium">Connection Error:</span>
       <span class="ml-1">Failed to load data from the server.</span>
     </div>
     <div class="mt-3">
-      <button @click="fetchUsersData" class="bg-red-600 hover:bg-red-700 text-white font-medium py-1 px-3 rounded text-sm">
+      <button
+        @click="fetchUsersData"
+        class="bg-red-600 hover:bg-red-700 text-white font-medium py-1 px-3 rounded text-sm"
+      >
         Retry
       </button>
     </div>
@@ -147,18 +157,47 @@ onUnmounted(() => {
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-50">
         <tr>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Weather Condition</th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Temperature</th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
+            Name
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
+            Weather Condition
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
+            Temperature
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
+            Actions
+          </th>
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
         <tr v-for="user in users" :key="user.id">
-          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ user.name }}</td>
+          <td
+            class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+          >
+            {{ user.name }}
+          </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
             <template v-if="user.weather">
-              <img :src="user.weather.icon" :title="user.weather.condition" alt="user.weather.condition" /> {{ user.weather.condition }}
+              <img
+                :src="user.weather.icon"
+                :title="user.weather.condition"
+                alt="user.weather.condition"
+              />
+              {{ user.weather.condition }}
             </template>
             <template v-else-if="retryCounts[user.id] >= 3">
               <span class="text-red-500">Error</span>
