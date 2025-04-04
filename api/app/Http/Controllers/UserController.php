@@ -15,9 +15,7 @@ class UserController extends Controller
         $limit = $request->query('limit', 20);
         $users = User::inRandomOrder()->take($limit)->get();
 
-        $usersWithWeather = $weatherService->updateWeatherForUser($users);
-
-        return response()->json($usersWithWeather);
+        return $this->getUsersWithWeather($users, $weatherService);
     }
 
     public function update(Request $request, WeatherService $weatherService): JsonResponse
@@ -25,12 +23,16 @@ class UserController extends Controller
         try {
             $usersList = $request->json('users', []);
             $users = User::findOrFail($usersList);
-
-            $usersWithWeather = $weatherService->updateWeatherForUser($users);
         } catch (ModelNotFoundException $e) {
-            $usersWithWeather = [];
+            return response()->json([]);
         }
 
+        return $this->getUsersWithWeather($users, $weatherService);
+    }
+
+    private function getUsersWithWeather($users, WeatherService $weatherService): JsonResponse
+    {
+        $usersWithWeather = $weatherService->updateWeatherForUser($users);
         return response()->json($usersWithWeather);
     }
 }
