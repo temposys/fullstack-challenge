@@ -8,14 +8,16 @@ use Illuminate\Support\Facades\Log;
 
 class WeatherService
 {
-    public function updateWeatherForUser($user)
+    public function updateWeatherForUser($users)
     {
-       dispatch(new UpdateWeatherJob($user));
+        return $users->map(function ($user) {
+            dispatch(new UpdateWeatherJob($user));
 
-        $key = "weather:{$user->latitude}:{$user->longitude}";
-        $user->weather = Cache::get($key) ? json_decode(Cache::get($key)) : null;
-        Log::info('Weather updated for user ' . $user->id . ': ' . json_encode($user->weather));
+            $key = "weather:{$user->latitude}:{$user->longitude}";
+            $user->weather = Cache::get($key) ? json_decode(Cache::get($key)) : null;
+            Log::info('Weather updated for user ' . $user->id . ': ' . json_encode($user->weather));
 
-        return $user;
+            return $user;
+        });
     }
 }

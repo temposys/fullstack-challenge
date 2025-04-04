@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/users', [UserController::class, 'getUsers']);
-Route::post('/weather/update', [WeatherController::class, 'update']);
+Route::get('/users', [UserController::class, 'index']);
+Route::post('/users', [UserController::class, 'update']);

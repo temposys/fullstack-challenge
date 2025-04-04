@@ -19,7 +19,7 @@ const maxRetries = 3;
 const fetchUsersData = async () => {
   apiError.value = false;
   try {
-    const response = await axios.get(`${API_DOMAIN}/users`);
+    const response = await axios.get(`${API_DOMAIN}/users?limit=10`);
     users.value = response.data;
 
     retryCount = 0;
@@ -30,7 +30,7 @@ const fetchUsersData = async () => {
 };
 
 const updateUserData = async (userIds: number[]) => {
-  const response = await axios.post(`${API_DOMAIN}/weather/update`, {
+  const response = await axios.post(`${API_DOMAIN}/users`, {
     users: userIds,
   });
 
