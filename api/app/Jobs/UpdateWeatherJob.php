@@ -2,10 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Events\WeatherUpdated;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -35,12 +33,12 @@ class UpdateWeatherJob implements ShouldQueue
         }
 
         if ($weather) {
-            // cache fresh weather data for 1 hour
+            // cache fresh weather data for 1 hour (replace if exists)
             $key = "weather:{$this->user->latitude}:{$this->user->longitude}";
             Cache::set($key, json_encode($weather), 3600);
         }
 
-        // Send fresh weather to frontend
+        // Send fresh weather to frontend if decide to use Websocket
         //  broadcast(new WeatherUpdated($this->user->id, $weather));
     }
 }
