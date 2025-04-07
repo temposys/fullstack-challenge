@@ -35,7 +35,7 @@ class UpdateWeatherJobTest extends TestCase
 
     public function test_handle_logs_error_on_api_failure()
     {
-        $user = UserFixture::get();
+        $user = UserFixture::getSecond();
 
         OpenWeather::shouldReceive('coordinates')
             ->once()
@@ -48,5 +48,8 @@ class UpdateWeatherJobTest extends TestCase
 
         $job = new UpdateWeatherJob($user);
         $job->handle();
+
+        $cachedWeatherData = Cache::get('weather:'.$user->latitude.':'.$user->longitude);
+        $this->assertNull($cachedWeatherData);
     }
 }
