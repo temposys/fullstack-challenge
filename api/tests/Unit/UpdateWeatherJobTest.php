@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use App\Jobs\UpdateWeatherJob;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use SolgenPower\LaravelOpenWeather\Facades\OpenWeather;
@@ -13,8 +12,6 @@ use Tests\TestCase;
 
 class UpdateWeatherJobTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function test_handle_method_works_correctly()
     {
         $user = UserFixture::get();
