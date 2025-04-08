@@ -2,7 +2,7 @@
   <dialog
     ref="dialog"
     :open="isOpen"
-    class="rounded-lg bg-white shadow-xl px-10 py-6 max-w-96"
+    class="rounded-lg bg-white shadow-xl px-10 py-6 w-96"
   >
     <!-- Close button -->
     <div class="absolute right-0 top-0 pr-4 pt-4">
