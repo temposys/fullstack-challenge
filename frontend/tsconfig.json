@@ -5,7 +5,16 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "module": "ESNext",
+    "target": "ESNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true
   },
 
   "references": [
